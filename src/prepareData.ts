@@ -1,12 +1,17 @@
 import { getUsersLikes } from 'src/likes/likes';
-import { findCurrentSprint, getSprintEntities } from 'src/sprints/sprints';
+import {
+  getSortedSprints,
+  findCurrentSprint,
+  getSprintEntities,
+} from 'src/sprints/sprints';
 import { getUsersCommits } from './commits/commits';
 
 import { Entity, Sprint, UserId } from './types/entities';
 import { StoryData as Slide } from './types/slides';
 
 function prepareData(entities: Entity[], { id: sprintId }: Sprint): Slide[] {
-  const currentSprint: Sprint = findCurrentSprint(entities, sprintId);
+  const sprints: Sprint[] = getSortedSprints(entities);
+  const currentSprint: Sprint = findCurrentSprint(sprints, sprintId);
   const sprintEntities: Entity[] = getSprintEntities(entities, currentSprint);
 
   /* 1 */

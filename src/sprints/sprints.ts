@@ -1,11 +1,30 @@
-import { Entity, Sprint } from 'src/types/entities';
+import { Entity, Sprint, SprintId } from 'src/types/entities';
 
+function sprintComparator(first: Sprint, second: Sprint) {
+  return first.id > second.id ? 1 : -1;
+}
+
+/**
+ * Get all sprints sorted in asc order
+ * @param entities - Entity array
+ */
+export function getSortedSprints(entities: Entity[]): Sprint[] {
+  return entities
+    .filter(entity => entity.type === 'Sprint')
+    .sort(sprintComparator) as Sprint[];
+}
+
+/**
+ * Find sprint by id using binary search
+ * @param sprints - Sprint array
+ * @param sprintId - current Sprint id
+ */
 export function findCurrentSprint(
-  entities: Entity[],
-  sprintId: number
+  sprints: Sprint[],
+  sprintId: SprintId
 ): Sprint {
-  for (let i = 0; i < entities.length; i++) {
-    const entity = entities[i];
+  for (let i = 0; i < sprints.length; i++) {
+    const entity = sprints[i];
     if (entity.type === 'Sprint' && entity.id === sprintId) {
       return entity as Sprint;
     }
