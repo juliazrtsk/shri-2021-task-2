@@ -5,7 +5,7 @@ export function getUsersLikesForSprint(
   sprint: Sprint
 ): Map<UserId, number> {
   const userLikesMap: Map<UserId, number> = new Map();
-  if (!sprint) return userLikesMap;
+  if (!sprint || !entities) return userLikesMap;
   entities.reduce((acc, cur) => {
     if (cur.type !== 'Comment') return acc;
     if (cur.createdAt >= sprint.startAt && cur.createdAt <= sprint.finishAt) {
