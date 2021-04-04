@@ -1,24 +1,25 @@
+import { ChartData, User as SlideUser } from 'src/types/slides';
+import { SlideConfigChart, SlideDataChart } from 'src/types/config';
+import { Sprint } from 'src/types/entities';
+
 import { mapUsersToValuesForSlide } from 'src/users/users';
 
-import { Story, User as SlideUser } from 'src/types/slides';
-import { User, UserId } from 'src/types/entities';
-
 export function toChart(
-  sprintsCommits: any[],
-  users: Map<UserId, User>,
-  usersLikesMap: Map<UserId, number>
-): Story {
+  slideConfig: SlideConfigChart,
+  slideData: SlideDataChart,
+  currentSprint: Sprint
+): ChartData {
+  const { commits, users, usersCommitsMap } = slideData;
+  const { title, valueText: transformValue } = slideConfig;
   const slideUsers: SlideUser[] = mapUsersToValuesForSlide(
     users,
-    usersLikesMap
+    usersCommitsMap,
+    transformValue
   );
   return {
-    alias: 'chart',
-    data: {
-      title: 'Коммиты',
-      subtitle: 'Последний вагон', // Todo: это нужно брать из текущего спринта
-      values: sprintsCommits,
-      users: slideUsers,
-    },
+    title,
+    subtitle: currentSprint.name,
+    values: commits,
+    users: slideUsers,
   };
 }

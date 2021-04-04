@@ -1,6 +1,5 @@
-import { toLeaders } from 'src/slides/leaders';
-import { toVote } from 'src/slides/vote';
-import { toChart } from 'src/slides/chart';
+import { slidesConfiguration } from 'src/slides/slidesConfiguration';
+import { transformDataToSlide } from 'src/slides/slides';
 
 import { getUsersLikes } from 'src/likes/likes';
 import { getCommitsForAllSprints, getUsersCommits } from 'src/commits/commits';
@@ -13,6 +12,7 @@ import {
 
 import { Entity, Sprint, User, UserId } from 'src/types/entities';
 import { Story } from 'src/types/slides';
+import { SlideConfig, SlideData } from 'src/types/config';
 
 function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
   const sprints: Sprint[] = getSortedSprints(entities);
@@ -37,20 +37,36 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
     currentSprint.id
   );
 
-  // First version
-  const stories: Story[] = [];
-  const leadersSlide: Story = toLeaders(users, currentSprintUsersCommitsMap);
-  const voteSlide: Story = toVote(users, currentSprintUsersLikesMap);
-  const chartSlide: Story = toChart(
-    sprintsCommits,
-    users,
-    currentSprintUsersCommitsMap
-  );
-  stories.push(leadersSlide);
-  stories.push(voteSlide);
-  stories.push(chartSlide);
+  const dataForSlides: { [key: string]: SlideData } = {
+    leaders: {
+      users,
+      usersCommitsMap: currentSprintUsersCommitsMap,
+    },
+    vote: {
+      users,
+      usersLikesMap: currentSprintUsersLikesMap,
+    },
+    chart: {
+      users,
+      usersCommitsMap: currentSprintUsersCommitsMap,
+      commits: sprintsCommits,
+    },
+    diagram: {},
+    activity: {},
+  };
 
-  return [];
+  const stories: Story[] = [];
+  slidesConfiguration.forEach((slideConfig: SlideConfig) => {
+    const slideData: SlideData = dataForSlides[slideConfig.alias];
+    const slide: Story = transformDataToSlide(
+      slideConfig,
+      slideData,
+      currentSprint
+    );
+    stories.push(slide);
+  });
+
+  return stories;
 }
 
 module.exports = { prepareData };

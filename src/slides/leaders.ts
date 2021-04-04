@@ -1,25 +1,25 @@
-import { Story, User as SlideUser } from 'src/types/slides';
-import { User, UserId } from 'src/types/entities';
+import { LeadersData, User as SlideUser } from 'src/types/slides';
+import { Sprint } from 'src/types/entities';
+import { SlideConfigLeaders, SlideDataLeaders } from 'src/types/config';
+
 import { mapUsersToValuesForSlide } from 'src/users/users';
 
-/* Todo: сделать так, чтобы эта штука возвращала только LeadersData? */
 export function toLeaders(
-  users: Map<UserId, User>,
-  usersLikesMap: Map<UserId, number>
-): Story {
-  const transformValue = (value: number) => `${value}`;
+  slideConfig: SlideConfigLeaders,
+  slideData: SlideDataLeaders,
+  currentSprint: Sprint
+): LeadersData {
+  const { users, usersCommitsMap } = slideData;
+  const { title, emoji, valueText: transformValue } = slideConfig;
   const slideUsers: SlideUser[] = mapUsersToValuesForSlide(
     users,
-    usersLikesMap,
+    usersCommitsMap,
     transformValue
   );
   return {
-    alias: 'leaders',
-    data: {
-      title: 'Больше всего коммитов',
-      subtitle: 'Последний вагон', // Todo: это нужно брать из текущего спринта
-      emoji: '👑',
-      users: slideUsers,
-    },
+    title,
+    subtitle: currentSprint.name,
+    emoji,
+    users: slideUsers,
   };
 }
