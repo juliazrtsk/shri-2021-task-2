@@ -1,8 +1,9 @@
 import { toLeaders } from 'src/slides/leaders';
 import { toVote } from 'src/slides/vote';
+import { toChart } from 'src/slides/chart';
 
 import { getUsersLikes } from 'src/likes/likes';
-import { getUsersCommits } from 'src/commits/commits';
+import { getCommitsForAllSprints, getUsersCommits } from 'src/commits/commits';
 import { getUsers } from 'src/users/users';
 import {
   getSortedSprints,
@@ -29,13 +30,25 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
     sprintEntities
   );
 
+  /* 3 */
+  const sprintsCommits = getCommitsForAllSprints(
+    sprints,
+    entities,
+    currentSprint.id
+  );
+
   // First version
   const stories: Story[] = [];
   const leadersSlide: Story = toLeaders(users, currentSprintUsersCommitsMap);
   const voteSlide: Story = toVote(users, currentSprintUsersLikesMap);
-
+  const chartSlide: Story = toChart(
+    sprintsCommits,
+    users,
+    currentSprintUsersCommitsMap
+  );
   stories.push(leadersSlide);
   stories.push(voteSlide);
+  stories.push(chartSlide);
 
   return [];
 }
