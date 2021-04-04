@@ -1,4 +1,5 @@
 const { getUsersLikesForSprint } = require('./likes');
+const serverData = require('../../examples/input.json');
 
 const CURRENT_SPRINT = {
   id: 977,
@@ -61,4 +62,24 @@ test('Find likes of all users for sprint: no comments for sprint', () => {
 test('Find likes of all users for sprint: null sprint', () => {
   const expected = new Map();
   expect(getUsersLikesForSprint(LIKES_TEST_DATA)).toStrictEqual(expected);
+});
+
+test('Find likes of all users for sprint: server data', () => {
+  const expected = new Map();
+  expected.set(1, 270);
+  expected.set(10, 212);
+  expected.set(11, 224);
+  expected.set(12, 210);
+  expected.set(2, 242);
+  expected.set(3, 216);
+  expected.set(4, 273);
+  expected.set(5, 284);
+  expected.set(6, 264);
+  expected.set(7, 306);
+  expected.set(8, 305);
+  expected.set(9, 219);
+
+  expect(getUsersLikesForSprint(serverData, CURRENT_SPRINT)).toStrictEqual(
+    expected
+  );
 });
