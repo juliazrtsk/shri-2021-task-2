@@ -3,6 +3,7 @@
     "outDir": "build",
     "noImplicitAny": true,
     "removeComments": true,
+    "downlevelIteration": true,
     "module": "es6",
     "target": "es5",
     "allowJs": true,

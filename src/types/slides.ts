@@ -72,7 +72,8 @@ export type TemplateData =
   | ActivityData
   | DiagramData
   | ChartData;
-export type StoryData = {
+
+export type Story = {
   alias: TemplateAlias;
-  data: VoteData | ChartData | DiagramData | ActivityData | LeadersData;
-}[];
+  data: TemplateData;
+};
