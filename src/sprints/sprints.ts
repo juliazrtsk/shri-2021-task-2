@@ -12,3 +12,29 @@ export function findCurrentSprint(
   }
   return null;
 }
+
+export function doesSprintContainEntity(
+  timestamp: number,
+  sprint: Sprint
+): boolean {
+  return (
+    !!timestamp && timestamp >= sprint.startAt && timestamp <= sprint.finishAt
+  );
+}
+
+export function getSprintEntities(
+  entities: Entity[],
+  sprint: Sprint
+): Entity[] {
+  return entities.filter(entity => {
+    switch (entity.type) {
+      case 'Comment':
+      case 'Issue':
+        return doesSprintContainEntity(entity.createdAt, sprint);
+      case 'Commit':
+        return doesSprintContainEntity(entity.timestamp, sprint);
+      default:
+        return false;
+    }
+  });
+}
