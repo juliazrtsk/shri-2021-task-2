@@ -1,4 +1,5 @@
 import { Entity, Sprint, UserId } from 'src/types/entities';
+import { ChartCommit } from 'src/types/slides';
 
 export function getUsersCommits(entities: Entity[]): Map<UserId, number> {
   const usersCommitsMap: Map<UserId, number> = new Map();
@@ -18,7 +19,7 @@ export function getCommitsForAllSprints(
   sprints: Sprint[],
   entities: Entity[],
   currentSprintId: number
-) {
+): ChartCommit[] {
   return sprints.map(sprint => {
     const commits = entities.reduce((acc, cur) => {
       if (

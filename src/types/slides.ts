@@ -31,14 +31,16 @@ export type VoteData = Template & {
   users: User[]; // упорядоченный по голосам список участников команды
 };
 
+export type ChartCommit = {
+  title: string;
+  hint?: string; // может использоваться вместо title
+  value: number;
+  active?: boolean; // признак, является ли элемент текущим
+};
+
 /** Формат данных для шаблона chart */
 export type ChartData = Template & {
-  values: {
-    title: string;
-    hint?: string; // может использоваться вместо title
-    value: number;
-    active?: boolean; // признак, является ли элемент текущим
-  }[]; // упорядоченный массив предыдущих, текущего и следующих периодов
+  values: ChartCommit[]; // упорядоченный массив предыдущих, текущего и следующих периодов
   users: User[]; // упорядоченный список лидеров
 };
 
