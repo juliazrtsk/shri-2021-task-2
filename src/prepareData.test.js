@@ -1,4 +1,5 @@
-const { findCurrentSprint } = require('./prepareData');
+const { prepareData } = require('./prepareData');
+
 const input = require('../examples/input.json');
 
 const CURRENT_SPRINT = {
@@ -9,11 +10,6 @@ const CURRENT_SPRINT = {
   finishAt: 1604178302000,
 };
 
-test('Find current sprint: existing', () => {
-  expect(findCurrentSprint(input, 977)).toStrictEqual(CURRENT_SPRINT);
-});
-
-test('Find current sprint: non-existing', () => {
-  const expected = null;
-  expect(findCurrentSprint(input, 1)).toBe(expected);
+test('Prepare data', () => {
+  expect(prepareData(input, CURRENT_SPRINT)).toStrictEqual([]);
 });
