@@ -57,17 +57,19 @@ export type DiagramData = Template & {
   categories: DiagramCommitCategory[];
 };
 
+export type ActivityDailyCommitStatistics = {
+  mon: number[]; // данные по дням недели и часам
+  tue: number[]; // один день — упорядоченный массив из 24 элементов, соответствуют часам
+  wed: number[];
+  thu: number[];
+  fri: number[];
+  sat: number[];
+  sun: number[];
+};
+
 /** Формат данных для шаблона activity */
 export type ActivityData = Template & {
-  data: {
-    mon: number[]; // данные по дням недели и часам
-    tue: number[]; // один день — упорядоченный массив из 24 элементов, соответствуют часам
-    wed: number[];
-    thu: number[];
-    fri: number[];
-    sat: number[];
-    sun: number[];
-  };
+  data: ActivityDailyCommitStatistics;
 };
 
 export type TemplateData =

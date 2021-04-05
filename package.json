@@ -9,7 +9,9 @@
     "build": "webpack --env development",
     "test": "jest --coverage"
   },
-  "dependencies": {},
+  "dependencies": {
+    "moment": "2.29.1"
+  },
   "devDependencies": {
     "@types/jest": "26.0.20",
     "@typescript-eslint/eslint-plugin": "4.20.0",

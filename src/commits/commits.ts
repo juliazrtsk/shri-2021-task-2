@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import {
   Commit,
   Entity,
@@ -7,7 +9,7 @@ import {
   UserId,
 } from 'src/types/entities';
 import { ChartCommit } from 'src/types/slides';
-import { CommitCategory } from 'src/types/config';
+import { CommitCategory, WeekDay } from 'src/types/config';
 
 export function getUsersCommitsMap(entities: Entity[]): Map<UserId, number> {
   const usersCommitsMap: Map<UserId, number> = new Map();
@@ -60,7 +62,7 @@ export function getCommitsList(entities: Entity[]): Commit[] {
   ) as Commit[];
 }
 
-export function getCommitsStatistics(
+export function getSprintCommitsStatistics(
   commits: Commit[],
   summaries: Map<SummaryId, Summary>
 ): Map<CommitCategory, number> {
@@ -84,9 +86,27 @@ export function getCommitsStatistics(
   );
 }
 
-export function getCommitStatisticsTotal(stats: Map<CommitCategory, number>) {
+export function getSprintCommitStatisticsTotal(
+  stats: Map<CommitCategory, number>
+) {
   return [...stats.entries()].reduce(
     (sum, categoryPair) => sum + categoryPair[1],
     0
   );
+}
+
+export function getDailyCommitsStatistics(
+  commits: Commit[]
+): Map<WeekDay, number[]> {
+  const dayStatTemplate = new Array(24).fill(0);
+  const weekDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+  return commits.reduce((commitsPerHour, commit) => {
+    const date = moment(commit.timestamp).utcOffset(180);
+    const weekDay = weekDays[date.weekday()];
+    const dayStat = commitsPerHour.get(weekDay) || [...dayStatTemplate];
+    dayStat[date.hour()] += 1;
+    commitsPerHour.set(weekDay, dayStat);
+    return commitsPerHour;
+  }, new Map());
 }

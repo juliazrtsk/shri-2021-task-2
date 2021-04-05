@@ -5,8 +5,9 @@ import { getUsersLikesMap } from 'src/likes/likes';
 import {
   getCommitsCountForAllSprints,
   getCommitsList,
-  getCommitsStatistics,
-  getCommitStatisticsTotal,
+  getDailyCommitsStatistics,
+  getSprintCommitsStatistics,
+  getSprintCommitStatisticsTotal,
   getUsersCommitsMap,
 } from 'src/commits/commits';
 import { getUsers } from 'src/users/users';
@@ -27,7 +28,12 @@ import {
   UserId,
 } from 'src/types/entities';
 import { Story } from 'src/types/slides';
-import { CommitCategory, SlideConfig, SlideData } from 'src/types/config';
+import {
+  CommitCategory,
+  SlideConfig,
+  SlideData,
+  WeekDay,
+} from 'src/types/config';
 
 function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
   const sprints: Sprint[] = getSortedSprints(entities);
@@ -43,41 +49,47 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
   const prevSprintEntities: Entity[] = getSprintEntities(entities, prevSprint);
   const prevSprintCommits: Commit[] = getCommitsList(prevSprintEntities);
 
-  /* 1 */
+  /* 1 Leaders */
   const currentSprintUsersCommitsMap: Map<UserId, number> = getUsersCommitsMap(
     sprintEntities
   );
 
-  /* 2 */
+  /* 2 Vote */
   const currentSprintUsersLikesMap: Map<UserId, number> = getUsersLikesMap(
     sprintEntities
   );
 
-  /* 3 */
+  /* 3 Chart */
   const sprintsCommitsCount = getCommitsCountForAllSprints(
     sprints,
     entities,
     currentSprint.id
   );
 
-  /* 4 */
+  /* 4 Diagram */
   const currentSprintCommitStatistics: Map<
     CommitCategory,
     number
-  > = getCommitsStatistics(sprintCommits, summaries);
+  > = getSprintCommitsStatistics(sprintCommits, summaries);
 
-  const currentSprintTotal: number = getCommitStatisticsTotal(
+  const currentSprintTotal: number = getSprintCommitStatisticsTotal(
     currentSprintCommitStatistics
   );
 
   const prevSprintCommitStatistics: Map<
     CommitCategory,
     number
-  > = getCommitsStatistics(prevSprintCommits, summaries);
+  > = getSprintCommitsStatistics(prevSprintCommits, summaries);
 
-  const prevSprintTotal: number = getCommitStatisticsTotal(
+  const prevSprintTotal: number = getSprintCommitStatisticsTotal(
     prevSprintCommitStatistics
   );
+
+  /* 5 Activity */
+  const dailyCommitStatistics: Map<
+    WeekDay,
+    number[]
+  > = getDailyCommitsStatistics(sprintCommits);
 
   const dataForSlides: { [key: string]: SlideData } = {
     leaders: {
@@ -103,7 +115,9 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
         total: prevSprintTotal,
       },
     },
-    activity: {},
+    activity: {
+      dailyCommitStatistics,
+    },
   };
 
   const stories: Story[] = [];
@@ -117,7 +131,7 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
     stories.push(slide);
   });
 
-  return [];
+  return stories;
 }
 
 module.exports = { prepareData };

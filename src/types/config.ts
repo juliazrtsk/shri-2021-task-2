@@ -66,7 +66,11 @@ export type SlideDataDiagram = {
   prevSprint: SprintCommitStatisticsData;
 };
 
-export type SlideDataActivity = {};
+export type WeekDay = 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat';
+
+export type SlideDataActivity = {
+  dailyCommitStatistics: Map<WeekDay, number[]>;
+};
 
 export type SlideData =
   | SlideDataLeaders
