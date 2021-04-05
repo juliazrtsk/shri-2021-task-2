@@ -1,7 +1,15 @@
-import { Entity, Sprint, UserId } from 'src/types/entities';
+import {
+  Commit,
+  Entity,
+  Sprint,
+  Summary,
+  SummaryId,
+  UserId,
+} from 'src/types/entities';
 import { ChartCommit } from 'src/types/slides';
+import { CommitCategory } from 'src/types/config';
 
-export function getUsersCommits(entities: Entity[]): Map<UserId, number> {
+export function getUsersCommitsMap(entities: Entity[]): Map<UserId, number> {
   const usersCommitsMap: Map<UserId, number> = new Map();
   if (!entities) return usersCommitsMap;
   entities.reduce((acc, cur) => {
@@ -37,4 +45,48 @@ export function getCommitsCountForAllSprints(
     }
     return result;
   });
+}
+
+export function getCommitCategory(commitSize: number): CommitCategory {
+  if (commitSize >= 1000) return 'extra';
+  if (commitSize >= 501 && commitSize <= 1000) return 'max';
+  if (commitSize >= 101 && commitSize <= 500) return 'mid';
+  return 'min';
+}
+
+export function getCommitsList(entities: Entity[]): Commit[] {
+  return entities.filter(
+    (entity: Entity) => entity.type === 'Commit'
+  ) as Commit[];
+}
+
+export function getCommitsStatistics(
+  commits: Commit[],
+  summaries: Map<SummaryId, Summary>
+): Map<CommitCategory, number> {
+  return commits.reduce(
+    (categoriesMap: Map<CommitCategory, number>, commit: Commit) => {
+      const commitSize: number = commit.summaries.reduce(
+        (size: number, relatedSummary: Summary | SummaryId) => {
+          const summary =
+            typeof relatedSummary === 'number'
+              ? summaries.get(relatedSummary)
+              : relatedSummary;
+          return size + summary.added + summary.removed;
+        },
+        0
+      ) as number;
+      const category = getCommitCategory(commitSize);
+      categoriesMap.set(category, (categoriesMap.get(category) || 0) + 1);
+      return categoriesMap;
+    },
+    new Map()
+  );
+}
+
+export function getCommitStatisticsTotal(stats: Map<CommitCategory, number>) {
+  return [...stats.entries()].reduce(
+    (sum, categoryPair) => sum + categoryPair[1],
+    0
+  );
 }

@@ -1,35 +1,55 @@
 import { slidesConfiguration } from 'src/slides/slidesConfiguration';
 import { transformDataToSlide } from 'src/slides/slides';
 
-import { getUsersLikes } from 'src/likes/likes';
+import { getUsersLikesMap } from 'src/likes/likes';
 import {
   getCommitsCountForAllSprints,
-  getUsersCommits,
+  getCommitsList,
+  getCommitsStatistics,
+  getCommitStatisticsTotal,
+  getUsersCommitsMap,
 } from 'src/commits/commits';
 import { getUsers } from 'src/users/users';
 import {
   getSortedSprints,
-  findCurrentSprint,
   getSprintEntities,
+  findSprintById,
 } from 'src/sprints/sprints';
+import { getSummaries } from 'src/summaries/summaries';
 
-import { Entity, Sprint, User, UserId } from 'src/types/entities';
+import {
+  Commit,
+  Entity,
+  Sprint,
+  Summary,
+  SummaryId,
+  User,
+  UserId,
+} from 'src/types/entities';
 import { Story } from 'src/types/slides';
-import { SlideConfig, SlideData } from 'src/types/config';
+import { CommitCategory, SlideConfig, SlideData } from 'src/types/config';
 
 function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
   const sprints: Sprint[] = getSortedSprints(entities);
   const users: Map<UserId, User> = getUsers(entities);
-  const currentSprint: Sprint = findCurrentSprint(sprints, sprintId);
+  const summaries: Map<SummaryId, Summary> = getSummaries(entities);
+
+  const currentSprint: Sprint = findSprintById(sprints, sprintId);
+  const prevSprint: Sprint = findSprintById(sprints, sprintId - 1);
+
   const sprintEntities: Entity[] = getSprintEntities(entities, currentSprint);
+  const sprintCommits: Commit[] = getCommitsList(sprintEntities);
+
+  const prevSprintEntities: Entity[] = getSprintEntities(entities, prevSprint);
+  const prevSprintCommits: Commit[] = getCommitsList(prevSprintEntities);
 
   /* 1 */
-  const currentSprintUsersCommitsMap: Map<UserId, number> = getUsersCommits(
+  const currentSprintUsersCommitsMap: Map<UserId, number> = getUsersCommitsMap(
     sprintEntities
   );
 
   /* 2 */
-  const currentSprintUsersLikesMap: Map<UserId, number> = getUsersLikes(
+  const currentSprintUsersLikesMap: Map<UserId, number> = getUsersLikesMap(
     sprintEntities
   );
 
@@ -38,6 +58,25 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
     sprints,
     entities,
     currentSprint.id
+  );
+
+  /* 4 */
+  const currentSprintCommitStatistics: Map<
+    CommitCategory,
+    number
+  > = getCommitsStatistics(sprintCommits, summaries);
+
+  const currentSprintTotal: number = getCommitStatisticsTotal(
+    currentSprintCommitStatistics
+  );
+
+  const prevSprintCommitStatistics: Map<
+    CommitCategory,
+    number
+  > = getCommitsStatistics(prevSprintCommits, summaries);
+
+  const prevSprintTotal: number = getCommitStatisticsTotal(
+    prevSprintCommitStatistics
   );
 
   const dataForSlides: { [key: string]: SlideData } = {
@@ -54,7 +93,16 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
       usersCommitsMap: currentSprintUsersCommitsMap,
       commits: sprintsCommitsCount,
     },
-    diagram: {},
+    diagram: {
+      currentSprint: {
+        stats: currentSprintCommitStatistics,
+        total: currentSprintTotal,
+      },
+      prevSprint: {
+        stats: prevSprintCommitStatistics,
+        total: prevSprintTotal,
+      },
+    },
     activity: {},
   };
 
@@ -69,7 +117,7 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
     stories.push(slide);
   });
 
-  return stories;
+  return [];
 }
 
 module.exports = { prepareData };

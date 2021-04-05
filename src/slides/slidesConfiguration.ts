@@ -50,7 +50,7 @@ export const slidesConfiguration: SlideConfig[] = [
       min: '1 — 100 строк',
     },
     valueText: (commits: number) => {
-      switch (commits % 100) {
+      switch (Math.abs(commits) % 100) {
         case 11:
         case 12:
         case 13:
@@ -59,7 +59,7 @@ export const slidesConfiguration: SlideConfig[] = [
         default:
           break;
       }
-      switch (commits % 10) {
+      switch (Math.abs(commits) % 10) {
         case 1:
           return `${commits} коммит`;
         case 2:

@@ -1,4 +1,4 @@
-const { getUsersLikes } = require('./likes');
+const { getUsersLikesMap } = require('./likes');
 const { getSprintEntities } = require('../sprints/sprints');
 
 const serverData = require('../../examples/input.json');
@@ -43,7 +43,7 @@ test('Find likes of all users for sprint', () => {
   expected.set(3, 4);
   expected.set(5, 6);
   const sprintEntities = getSprintEntities(LIKES_TEST_DATA, CURRENT_SPRINT);
-  expect(getUsersLikes(sprintEntities)).toStrictEqual(expected);
+  expect(getUsersLikesMap(sprintEntities)).toStrictEqual(expected);
 });
 
 test('Find likes of all users for sprint: no comments for sprint', () => {
@@ -56,12 +56,12 @@ test('Find likes of all users for sprint: no comments for sprint', () => {
     finishAt: 1504178302000,
   };
   const sprintEntities = getSprintEntities(LIKES_TEST_DATA, sprint);
-  expect(getUsersLikes(sprintEntities)).toStrictEqual(expected);
+  expect(getUsersLikesMap(sprintEntities)).toStrictEqual(expected);
 });
 
 test('Find likes of all users for sprint: null entities array', () => {
   const expected = new Map();
-  expect(getUsersLikes()).toStrictEqual(expected);
+  expect(getUsersLikesMap()).toStrictEqual(expected);
 });
 
 test('Find likes of all users for sprint: server data', () => {
@@ -80,5 +80,5 @@ test('Find likes of all users for sprint: server data', () => {
   expected.set(9, 219);
 
   const sprintEntities = getSprintEntities(serverData, CURRENT_SPRINT);
-  expect(getUsersLikes(sprintEntities)).toStrictEqual(expected);
+  expect(getUsersLikesMap(sprintEntities)).toStrictEqual(expected);
 });

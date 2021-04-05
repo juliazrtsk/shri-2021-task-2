@@ -1,4 +1,4 @@
-const { getUsersCommits } = require('./commits');
+const { getUsersCommitsMap } = require('./commits');
 const { getSprintEntities } = require('../sprints/sprints');
 const serverData = require('../../examples/input.json');
 
@@ -50,7 +50,7 @@ test('Find commits of all users for current sprint', () => {
   expected.set(1, 2);
   expected.set(2, 1);
   const sprintEntities = getSprintEntities(COMMITS_TEST_DATA, CURRENT_SPRINT);
-  expect(getUsersCommits(sprintEntities)).toStrictEqual(expected);
+  expect(getUsersCommitsMap(sprintEntities)).toStrictEqual(expected);
 });
 
 test('Find commits of all users for another sprint', () => {
@@ -62,7 +62,7 @@ test('Find commits of all users for another sprint', () => {
     finishAt: 1504984280000,
   };
   const sprintEntities = getSprintEntities(COMMITS_TEST_DATA, sprint);
-  expect(getUsersCommits(sprintEntities)).toStrictEqual(expected);
+  expect(getUsersCommitsMap(sprintEntities)).toStrictEqual(expected);
 });
 
 test('Find commits of all users for sprint: no commits for sprint', () => {
@@ -73,12 +73,12 @@ test('Find commits of all users for sprint: no commits for sprint', () => {
     finishAt: 2,
   };
   const sprintEntities = getSprintEntities(COMMITS_TEST_DATA, sprint);
-  expect(getUsersCommits(sprintEntities)).toStrictEqual(expected);
+  expect(getUsersCommitsMap(sprintEntities)).toStrictEqual(expected);
 });
 
 test('Find commits of all users for sprint: null entities array', () => {
   const expected = new Map();
-  expect(getUsersCommits()).toStrictEqual(expected);
+  expect(getUsersCommitsMap()).toStrictEqual(expected);
 });
 
 test('Find commits of all users for sprint: server data', () => {
@@ -97,5 +97,5 @@ test('Find commits of all users for sprint: server data', () => {
   expected.set(9, 11);
 
   const sprintEntities = getSprintEntities(serverData, CURRENT_SPRINT);
-  expect(getUsersCommits(sprintEntities)).toStrictEqual(expected);
+  expect(getUsersCommitsMap(sprintEntities)).toStrictEqual(expected);
 });

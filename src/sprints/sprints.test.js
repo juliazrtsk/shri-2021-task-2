@@ -1,5 +1,5 @@
 const serverData = require('../../examples/input.json');
-const { findCurrentSprint, doesSprintContainEntity } = require('./sprints');
+const { findSprintById, doesSprintContainEntity } = require('./sprints');
 
 const CURRENT_SPRINT = {
   id: 977,
@@ -10,14 +10,14 @@ const CURRENT_SPRINT = {
 };
 
 test('Find current sprint: existing', () => {
-  expect(findCurrentSprint(serverData, CURRENT_SPRINT.id)).toStrictEqual(
+  expect(findSprintById(serverData, CURRENT_SPRINT.id)).toStrictEqual(
     CURRENT_SPRINT
   );
 });
 
 test('Find current sprint: non-existing', () => {
   const expected = null;
-  expect(findCurrentSprint(serverData, 1)).toBe(expected);
+  expect(findSprintById(serverData, 1)).toBe(expected);
 });
 
 test('Check if sprint contains entity: existing entity, Commit type', () => {

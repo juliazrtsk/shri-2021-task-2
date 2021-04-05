@@ -44,15 +44,17 @@ export type ChartData = Template & {
   users: User[]; // упорядоченный список лидеров
 };
 
+export type DiagramCommitCategory = {
+  title: string; // заголовок категории
+  valueText: string; // значение и единицы измерения
+  differenceText: string; // значение разницы с предыдущим периодом и единицы по категории
+};
+
 /** Формат данных для шаблона diagram */
 export type DiagramData = Template & {
   totalText: string; // значение и единицы
   differenceText: string; // разница со значением предыдущего периода (спринта) и единицы
-  categories: {
-    title: string; // заголовок категории
-    valueText: string; // значение и единицы измерения
-    differenceText: string; // значение разницы с предыдущим периодом и единицы по категории
-  }[];
+  categories: DiagramCommitCategory[];
 };
 
 /** Формат данных для шаблона activity */

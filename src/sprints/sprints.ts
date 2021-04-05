@@ -15,14 +15,11 @@ export function getSortedSprints(entities: Entity[]): Sprint[] {
 }
 
 /**
- * Find sprint by id using binary search
+ * Find sprint by id
  * @param sprints - Sprint array
  * @param sprintId - current Sprint id
  */
-export function findCurrentSprint(
-  sprints: Sprint[],
-  sprintId: SprintId
-): Sprint {
+export function findSprintById(sprints: Sprint[], sprintId: SprintId): Sprint {
   for (let i = 0; i < sprints.length; i++) {
     const entity = sprints[i];
     if (entity.type === 'Sprint' && entity.id === sprintId) {

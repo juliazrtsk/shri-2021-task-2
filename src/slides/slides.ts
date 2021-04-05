@@ -1,16 +1,17 @@
-import { ActivityData, DiagramData, Story } from 'src/types/slides';
+import { ActivityData, Story } from 'src/types/slides';
 import { Sprint } from 'src/types/entities';
 import { SlideConfig, SlideData } from 'src/types/config';
 
 import { toLeaders } from 'src/slides/leaders';
 import { toVote } from 'src/slides/vote';
 import { toChart } from 'src/slides/chart';
+import { toDiagram } from 'src/slides/diagram';
 
 const transformDataMap = {
   leaders: toLeaders,
   vote: toVote,
   chart: toChart,
-  diagram: () => ({} as DiagramData),
+  diagram: toDiagram,
   activity: () => ({} as ActivityData),
 };
 

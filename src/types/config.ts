@@ -1,5 +1,5 @@
 import { ChartCommit, TemplateAlias } from 'src/types/slides';
-import { User, UserId } from './entities';
+import { User, UserId } from 'src/types/entities';
 
 export type SlideConfigBase = {
   alias: TemplateAlias;
@@ -20,11 +20,9 @@ export type SlideConfigChart = SlideConfigBase & {
   valueText: (value: number) => string | number;
 };
 
-export type DiagramCategories = 'extra' | 'max' | 'mid' | 'min';
-
 export type SlideConfigDiagram = SlideConfigBase & {
-  totalText: (value: number) => string | number;
-  differenceText: (value: number) => string | number;
+  totalText: (value: number) => string;
+  differenceText: (value: number) => string;
   valueText: (value: number) => string | number;
   categories: {
     [key: string]: string;
@@ -56,7 +54,17 @@ export type SlideDataChart = {
   commits: ChartCommit[];
 };
 
-export type SlideDataDiagram = {};
+export type CommitCategory = 'extra' | 'max' | 'mid' | 'min';
+
+export type SprintCommitStatisticsData = {
+  stats: Map<CommitCategory, number>;
+  total: number;
+};
+
+export type SlideDataDiagram = {
+  currentSprint: SprintCommitStatisticsData;
+  prevSprint: SprintCommitStatisticsData;
+};
 
 export type SlideDataActivity = {};
 

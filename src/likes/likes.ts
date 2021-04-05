@@ -1,6 +1,6 @@
 import { Entity, UserId } from 'src/types/entities';
 
-export function getUsersLikes(entities: Entity[]): Map<UserId, number> {
+export function getUsersLikesMap(entities: Entity[]): Map<UserId, number> {
   const userLikesMap: Map<UserId, number> = new Map();
   if (!entities) return userLikesMap;
   entities.reduce((acc, cur) => {
