@@ -15,7 +15,7 @@ export function getUsersCommits(entities: Entity[]): Map<UserId, number> {
   return usersCommitsMap;
 }
 
-export function getCommitsForAllSprints(
+export function getCommitsCountForAllSprints(
   sprints: Sprint[],
   entities: Entity[],
   currentSprintId: number

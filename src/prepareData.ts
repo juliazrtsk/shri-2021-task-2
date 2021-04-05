@@ -2,7 +2,10 @@ import { slidesConfiguration } from 'src/slides/slidesConfiguration';
 import { transformDataToSlide } from 'src/slides/slides';
 
 import { getUsersLikes } from 'src/likes/likes';
-import { getCommitsForAllSprints, getUsersCommits } from 'src/commits/commits';
+import {
+  getCommitsCountForAllSprints,
+  getUsersCommits,
+} from 'src/commits/commits';
 import { getUsers } from 'src/users/users';
 import {
   getSortedSprints,
@@ -31,7 +34,7 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
   );
 
   /* 3 */
-  const sprintsCommits = getCommitsForAllSprints(
+  const sprintsCommitsCount = getCommitsCountForAllSprints(
     sprints,
     entities,
     currentSprint.id
@@ -49,7 +52,7 @@ function prepareData(entities: Entity[], { id: sprintId }: Sprint): Story[] {
     chart: {
       users,
       usersCommitsMap: currentSprintUsersCommitsMap,
-      commits: sprintsCommits,
+      commits: sprintsCommitsCount,
     },
     diagram: {},
     activity: {},
